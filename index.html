@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Arabic font: Tajawal (nice modern Arabic) -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Aref Ruqaa for Arabic couple names -->
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -108,9 +110,13 @@
             font-family: 'Tajawal', sans-serif;
         }
 
-        /* Keep couple names always in Dancing Script (English & Arabic) */
+        /* Keep couple names usually in Dancing Script (English) */
         .couple-names {
-            font-family: 'Dancing Script', cursive !important;
+            font-family: 'Dancing Script', cursive;
+        }
+        /* When page is RTL (Arabic) show couple names in Aref Ruqaa */
+        body.rtl .couple-names {
+            font-family: 'Aref Ruqaa', 'Dancing Script', cursive !important;
         }
         
         /* RTL adjustments for details section */
@@ -708,7 +714,7 @@
     <header>
         <div class="floating-hearts" id="hearts-container"></div>
         <div class="container">
-            <h1 class="couple-names">MAHMOUD & SARA</h1>
+            <h1 id="coupleNames" class="couple-names">MAHMOUD & SARA</h1>
             <p class="subtitle" id="saveTheDate">SAVE THE DATE</p>
             
             <div class="invited-text" id="invitedText">YOU ARE INVITED</div>
@@ -851,6 +857,7 @@
         // Language translations
         const translations = {
             en: {
+                coupleNames: "MAHMOUD & SARA",
                 saveTheDate: "SAVE THE DATE",
                 invitedText: "YOU ARE INVITED",
                 countdownTitle: "Counting every moment until we celebrate too",
@@ -891,6 +898,7 @@
                 footerDetails: "June 7, 2026 • Diva Garden Hall • Talaha City"
             },
             ar: {
+                coupleNames: "مـحـمـــود و ســـــاره",
                 saveTheDate: "احفظ التاريخ",
                 invitedText: "أنت مدعو",
                 countdownTitle: "بنعد كل لحظه بتعدي لحد ما نحتفل سوا",
