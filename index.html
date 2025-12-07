@@ -6,6 +6,8 @@
     <title>MAHMOUD & SARA - Engagement Celebration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Arabic font: Tajawal (nice modern Arabic) -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -32,7 +34,99 @@
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(174, 214, 241, 0.3) 0%, transparent 20%),
                 radial-gradient(circle at 90% 80%, rgba(52, 152, 219, 0.2) 0%, transparent 20%);
+            transition: all 0.3s ease;
         }
+        
+        /* Language Toggle Button */
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            padding: 8px 15px;
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.2);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary-blue);
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .lang-btn:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .lang-btn.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+        
+        .lang-separator {
+            width: 1px;
+            height: 20px;
+            background: rgba(44, 62, 80, 0.2);
+            margin: 0 5px;
+        }
+        
+        /* RTL styles for Arabic */
+        body.rtl {
+            direction: rtl;
+            text-align: right;
+            /* use Tajawal for Arabic content */
+            font-family: 'Tajawal', 'Poppins', sans-serif;
+        }
+        
+        /* keep language toggle fixed at top-right even when page is RTL */
+        body.rtl .lang-toggle {
+            right: 20px;
+            left: auto;
+        }
+        
+        /* Ensure headings also use the Arabic font when RTL is active
+           NOTE: couple-names is intentionally excluded so it keeps Dancing Script */
+        body.rtl .section-title,
+        body.rtl .detail-title,
+        body.rtl .message-title,
+        body.rtl .upload-title,
+        body.rtl .countdown-title {
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        /* Keep couple names always in Dancing Script (English & Arabic) */
+        .couple-names {
+            font-family: 'Dancing Script', cursive !important;
+        }
+        
+        /* RTL adjustments for details section */
+        body.rtl .details-container {
+            flex-direction: row-reverse;
+        }
+        
+        body.rtl .control-group {
+            flex-direction: row-reverse;
+        }
+        
+        body.rtl .color-palette {
+            flex-direction: row-reverse;
+        }
+        
+        /* Continue with the rest of your existing CSS... */
         
         .container {
             max-width: 1200px;
@@ -593,39 +687,54 @@
             .section-title { font-size: 2.5rem; }
             .artdraw-container { padding: 25px 15px; }
             #drawingCanvas { height: 400px; }
+            .lang-toggle {
+                top: 15px;
+                right: 15px;
+                padding: 6px 12px;
+            }
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Language Toggle Button (single button showing the language you'll switch TO) -->
+    <div class="lang-toggle" id="langToggle">
+        <button class="lang-btn" id="langToggleBtn" aria-label="Toggle language">عربي</button>
+    </div>
+    
     <header>
         <div class="floating-hearts" id="hearts-container"></div>
         <div class="container">
             <h1 class="couple-names">MAHMOUD & SARA</h1>
-            <p class="subtitle">SAVE THE DATE</p>
-            <div class="invited-text">YOU ARE INVITED</div>
+            <p class="subtitle" id="saveTheDate">SAVE THE DATE</p>
+            
+            <div class="invited-text" id="invitedText">YOU ARE INVITED</div>
         </div>
     </header>
     
     <section class="countdown-section">
         <div class="container">
-            <h2 class="countdown-title">Counting every moment until we celebrate too</h2>
-            <p class="countdown-subtitle">Join us at our engagement celebration</p>
+            <h2 class="countdown-title" id="countdownTitle">Counting every moment until we celebrate too</h2>
+            <p class="countdown-subtitle" id="countdownSubtitle">Join us at our engagement celebration</p>
             <div class="countdown-container">
                 <div class="countdown-box">
                     <span class="countdown-number" id="days">00</span>
-                    <span class="countdown-label">DAYS</span>
+                    <span class="countdown-label" id="daysLabel">DAYS</span>
                 </div>
                 <div class="countdown-box">
                     <span class="countdown-number" id="hours">00</span>
-                    <span class="countdown-label">HOURS</span>
+                    <span class="countdown-label" id="hoursLabel">HOURS</span>
                 </div>
                 <div class="countdown-box">
                     <span class="countdown-number" id="minutes">00</span>
-                    <span class="countdown-label">MINUTES</span>
+                    <span class="countdown-label" id="minutesLabel">MINUTES</span>
                 </div>
                 <div class="countdown-box">
                     <span class="countdown-number" id="seconds">00</span>
-                    <span class="countdown-label">SECONDS</span>
+                    <span class="countdown-label" id="secondsLabel">SECONDS</span>
                 </div>
             </div>
         </div>
@@ -633,23 +742,23 @@
     
     <section class="details-section">
         <div class="container">
-            <h2 class="section-title">Event Details</h2>
+            <h2 class="section-title" id="detailsTitle">Event Details</h2>
             <div class="details-container">
                 <div class="detail-card">
                     <div class="detail-icon"><i class="far fa-calendar-alt"></i></div>
-                    <h3 class="detail-title">Date & Time</h3>
-                    <p class="detail-text">Saturday, June 6, 2026</p>
-                    <p class="detail-text">07:00 PM</p>
-                    <p class="detail-text"><i class="fas fa-clock" style="color: var(--accent-blue); margin-right: 8px;"></i> Please arrive 30 minutes early</p>
+                    <h3 class="detail-title" id="dateTimeTitle">Date & Time</h3>
+                    <p class="detail-text" id="dateText">Saturday, June 7, 2026</p>
+                    <p class="detail-text" id="timeText">07:00 PM</p>
+                    <p class="detail-text" id="arrivalText"><i class="fas fa-clock" style="color: var(--accent-blue); margin-right: 8px;"></i> Please arrive 30 minutes early</p>
                 </div>
                 <div class="detail-card">
                     <div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div>
-                    <h3 class="detail-title">Location</h3>
-                    <p class="detail-text">Diva Garden Hall</p>
-                    <p class="detail-text">Talaha City</p>
-                    <p class="detail-text" style="margin-top: 20px;"><i class="fas fa-heart" style="color: var(--accent-blue); margin-right: 8px;"></i> Join us as we begin our journey of love together</p>
+                    <h3 class="detail-title" id="locationTitle">Location</h3>
+                    <p class="detail-text" id="venueText">Diva Garden Hall</p>
+                    <p class="detail-text" id="cityText">Talaha City</p>
+                    <p class="detail-text" id="loveJourneyText" style="margin-top: 20px;"><i class="fas fa-heart" style="color: var(--accent-blue); margin-right: 8px;"></i> Join us as we begin our journey of love together</p>
                     <button id="mapBtn" style="margin-top: 20px; background: var(--accent-blue); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 500;">
-                        <i class="fas fa-map-marked-alt"></i> View on Map
+                        <i class="fas fa-map-marked-alt"></i> <span id="mapBtnText">View on Map</span>
                     </button>
                 </div>
             </div>
@@ -659,9 +768,9 @@
     <section class="message-section">
         <div class="container">
             <div class="message-box">
-                <h2 class="message-title">Our Love Story</h2>
-                <p class="message-text">From the moment we met, we knew our lives would never be the same. Every smile, every laugh, and every moment shared has brought us closer to this beautiful day. We are so excited to begin this new chapter together and we can't wait to celebrate with all of you, our dear family and friends.</p>
-                <p class="message-text">Your presence is the greatest gift we could ask for as we embark on this journey of love and togetherness. This day marks the beginning of forever, and we are thrilled to share it with those who mean the most to us.</p>
+                <h2 class="message-title" id="messageTitle">Our Love Story</h2>
+                <p class="message-text" id="messageText1">From the moment we met, we knew our lives would never be the same. Every smile, every laugh, and every moment shared has brought us closer to this beautiful day. We are so excited to begin this new chapter together and we can't wait to celebrate with all of you, our dear family and friends.</p>
+                <p class="message-text" id="messageText2">Your presence is the greatest gift we could ask for as we embark on this journey of love and togetherness. This day marks the beginning of forever, and we are thrilled to share it with those who mean the most to us.</p>
             </div>
         </div>
     </section>
@@ -669,34 +778,34 @@
     <section class="upload-section">
         <div class="container">
             <div class="upload-container">
-                <h2 class="upload-title">Share Your Photos From The Day</h2>
-                <p class="upload-subtitle">Scan the QR code or click the button below to upload your photos directly</p>
+                <h2 class="upload-title" id="uploadTitle">Share Your Photos From The Day</h2>
+                <p class="upload-subtitle" id="uploadSubtitle">Scan the QR code or click the button below to upload your photos directly</p>
                 <div class="qr-container">
                     <div class="qr-code"><i class="fas fa-qrcode"></i></div>
-                    <span class="qr-label">Scan to upload photos</span>
+                    <span class="qr-label" id="qrLabel">Scan to upload photos</span>
                 </div>
                 <button class="upload-button" id="uploadBtn">
                     <i class="fas fa-cloud-upload-alt"></i>
-                    Upload Your Photos
+                    <span id="uploadBtnText">Upload Your Photos</span>
                 </button>
-                <p style="color: #666; margin-top: 20px; font-size: 0.9rem;">Photos will be added to our shared gallery</p>
+                <p style="color: #666; margin-top: 20px; font-size: 0.9rem;" id="uploadNote">Photos will be added to our shared gallery</p>
             </div>
         </div>
     </section>
     
     <section class="artdraw-section">
         <div class="container">
-            <h2 class="section-title">Leave Your Creative Mark</h2>
-            <p style="text-align: center; color: #666; font-size: 1.2rem; margin-bottom: 50px;">Draw something special, write a message, or create art to celebrate our love story</p>
+            <h2 class="section-title" id="artdrawTitle">Leave Your Creative Mark</h2>
+            <p style="text-align: center; color: #666; font-size: 1.2rem; margin-bottom: 50px;" id="artdrawSubtitle">Draw something special, write a message, or create art to celebrate our love story</p>
             <div class="artdraw-container">
                 <div class="canvas-controls">
                     <div class="control-group">
-                        <label>Brush Size:</label>
+                        <label id="brushSizeLabel">Brush Size:</label>
                         <input type="range" id="brushSize" min="1" max="20" value="3">
                         <span id="brushSizeValue">3px</span>
                     </div>
                     <div class="control-group">
-                        <label>Color:</label>
+                        <label id="colorLabel">Color:</label>
                         <div class="color-palette">
                             <div class="color-option active" data-color="#2c3e50" style="background: #2c3e50;"></div>
                             <div class="color-option" data-color="#3498db" style="background: #3498db;"></div>
@@ -711,18 +820,18 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <button class="canvas-btn" id="clearCanvas"><i class="fas fa-eraser"></i> Clear Canvas</button>
-                        <button class="canvas-btn primary" id="saveDrawing"><i class="fas fa-heart"></i> Save & Share</button>
+                        <button class="canvas-btn" id="clearCanvas"><i class="fas fa-eraser"></i> <span id="clearBtnText">Clear Canvas</span></button>
+                        <button class="canvas-btn primary" id="saveDrawing"><i class="fas fa-heart"></i> <span id="saveBtnText">Save & Share</span></button>
                     </div>
                 </div>
                 <div class="canvas-wrapper">
                     <canvas id="drawingCanvas"></canvas>
-                    <div class="canvas-instructions"><i class="fas fa-paint-brush"></i> Click and drag to draw</div>
+                    <div class="canvas-instructions"><i class="fas fa-paint-brush"></i> <span id="canvasInstructions">Click and drag to draw</span></div>
                 </div>
                 <div class="gallery-section">
-                    <h3 style="color: var(--primary-blue); margin-bottom: 20px; font-size: 1.5rem;"><i class="fas fa-images"></i> Guest Creations</h3>
+                    <h3 style="color: var(--primary-blue); margin-bottom: 20px; font-size: 1.5rem;"><i class="fas fa-images"></i> <span id="galleryTitle">Guest Creations</span></h3>
                     <div id="drawingsGallery" class="drawings-grid">
-                        <div class="sample-message">Be the first to leave your creative mark! ✨</div>
+                        <div class="sample-message" id="sampleMessage">Be the first to leave your creative mark! ✨</div>
                     </div>
                 </div>
             </div>
@@ -731,14 +840,136 @@
 
     <footer>
         <div class="container">
-            <p class="footer-text">With love and gratitude,</p>
+            <p class="footer-text" id="footerWithLove">With love and gratitude,</p>
             <h2 class="couple-names" style="color: white; font-size: 3.5rem; margin: 20px 0;">MAHMOUD & SARA</h2>
-            <p class="footer-text" style="margin-top: 30px;">Made with <span class="heart-icon">❤</span> for our special day</p>
-            <p class="footer-text" style="font-size: 0.9rem; margin-top: 30px;">June 7, 2026 • Diva Garden Hall • Talaha City</p>
+            <p class="footer-text" style="margin-top: 30px;" id="footerMadeWith">Made with <span class="heart-icon">❤</span> for our special day</p>
+            <p class="footer-text" style="font-size: 0.9rem; margin-top: 30px;" id="footerDetails">June 7, 2026 • Diva Garden Hall • Talaha City</p>
         </div>
     </footer>
     
     <script>
+        // Language translations
+        const translations = {
+            en: {
+                saveTheDate: "SAVE THE DATE",
+                invitedText: "YOU ARE INVITED",
+                countdownTitle: "Counting every moment until we celebrate too",
+                countdownSubtitle: "Join us at our engagement celebration",
+                daysLabel: "DAYS",
+                hoursLabel: "HOURS",
+                minutesLabel: "MINUTES",
+                secondsLabel: "SECONDS",
+                detailsTitle: "Event Details",
+                dateTimeTitle: "Date & Time",
+                dateText: "Saturday, June 7, 2026",
+                timeText: "07:00 PM",
+                arrivalText: "Please arrive 30 minutes early",
+                locationTitle: "Location",
+                venueText: "Diva Garden Hall",
+                cityText: "Talaha City",
+                loveJourneyText: "Join us as we begin our journey of love together",
+                mapBtnText: "View on Map",
+                messageTitle: "Our Love Story",
+                messageText1: "From the moment we met, we knew our lives would never be the same. Every smile, every laugh, and every moment shared has brought us closer to this beautiful day. We are so excited to begin this new chapter together and we can't wait to celebrate with all of you, our dear family and friends.",
+                messageText2: "Your presence is the greatest gift we could ask for as we embark on this journey of love and togetherness. This day marks the beginning of forever, and we are thrilled to share it with those who mean the most to us.",
+                uploadTitle: "Share Your Photos From The Day",
+                uploadSubtitle: "Scan the QR code or click the button below to upload your photos directly",
+                qrLabel: "Scan to upload photos",
+                uploadBtnText: "Upload Your Photos",
+                uploadNote: "Photos will be added to our shared gallery",
+                artdrawTitle: "Leave Your Creative Mark",
+                artdrawSubtitle: "Draw something special, write a message, or create art to celebrate our love story",
+                brushSizeLabel: "Brush Size:",
+                colorLabel: "Color:",
+                clearBtnText: "Clear Canvas",
+                saveBtnText: "Save & Share",
+                canvasInstructions: "Click and drag to draw",
+                galleryTitle: "Guest Creations",
+                sampleMessage: "Be the first to leave your creative mark! ✨",
+                footerWithLove: "With love and gratitude,",
+                footerMadeWith: "Made with ❤ for our special day",
+                footerDetails: "June 7, 2026 • Diva Garden Hall • Talaha City"
+            },
+            ar: {
+                saveTheDate: "احفظ التاريخ",
+                invitedText: "أنت مدعو",
+                countdownTitle: "بنعد كل لحظه بتعدي لحد ما نحتفل سوا",
+                countdownSubtitle: "انضم إلينا في احتفال خطوبتنا",
+                daysLabel: "يوم",
+                hoursLabel: "ساعة",
+                minutesLabel: "دقيقة",
+                secondsLabel: "ثانية",
+                detailsTitle: "تفاصيل خطوبتنا",
+                dateTimeTitle: "التاريخ والوقت",
+                dateText: "السبت، 7 يونيو 2026",
+                timeText: "07:00 مساءً",
+                arrivalText: "حاولوا توصلوا قبل 30 دقيقة",
+                locationTitle: "المكان",
+                venueText: "بيت العيلة",
+                cityText: "القومية - امبابة",
+                loveJourneyText: "شاركونا واحنا بنبقي رحلة حبنا سوا",
+                mapBtnText: "عرض على الخريطة",
+                messageTitle: "قصة حبنا",
+                messageText1: "من اول لحظه شوفنا فيها بعض واتقابلنا ، عرفنا وقتها ان حياتنا مش هتكون زي ما كانت قبل كدا. كل ابتسامة، وكل ضحكة، وكل لحظة شاركناها سوا كانت بتقربنا لليوم دا. احنا متحمسين جدا نبدأ رحلتنا الجديدة مع بعض و متحمسين اننا نحتفل معاكم كلكم،علشان انتم عيلتنا واصحابنا الغالين علينا أوي",
+                messageText2: "حضوركم لليوم دا اكبر هدية هنطلبها منكم واحنا بنبدأ رحلتنا من الحب، اليوم دا بيمثل بدابة للأبد، احنا مبسوطين من قلبنا علشان بنشارك اليوم دا معاكم",
+                uploadTitle: "متنسوش تشاركونا صوركم في يومنا",
+                uploadSubtitle: "امسح رمز QR أو انقر على الزر أدناه لتحميل صورك مباشرة",
+                qrLabel: "امسح لتحميل الصور",
+                uploadBtnText: "حمّل صورك",
+                uploadNote: "ستتم إضافة الصور إلى معرضنا المشترك",
+                artdrawTitle: "سيب لنا رساله او بصمه تفرحنا ",
+                artdrawSubtitle: "ارسم شيئًا مميزًا، اكتب رسالة، أو أنشئ فنًا للاحتفال بقصة حبنا",
+                brushSizeLabel: "حجم الفرشة:",
+                colorLabel: "اللون:",
+                clearBtnText: "مسح اللوحة",
+                saveBtnText: "حفظ ومشاركة",
+                canvasInstructions: "انقر واسحب للرسم",
+                galleryTitle: "إبداعات الضيوف",
+                sampleMessage: "كن أول من يترك بصمته الإبداعية! ✨",
+                footerWithLove: "مع كل الحب والامتنان،",
+                footerMadeWith: "صنع بكل ❤ ليومنا الخاص",
+                footerDetails: "٢٦ يونيو ٢٠٢٦ • بيت العيلة - القومية - امبابة"
+            }
+        };
+        
+        // Language toggle functionality (single button)
+        let currentLang = 'en';
+        
+        function toggleLanguage(lang) {
+            currentLang = lang;
+            
+            // html lang / dir
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+            document.body.classList.toggle('rtl', lang === 'ar');
+            
+            // apply translations (match keys -> element ids)
+            const elements = translations[lang] || {};
+            for (const key in elements) {
+                const element = document.getElementById(key);
+                if (element) element.textContent = elements[key];
+            }
+            
+            // ensure date/footer specifics (if present)
+            if (document.getElementById('dateText')) document.getElementById('dateText').textContent = translations[lang].dateText || '';
+            if (document.getElementById('footerDetails')) document.getElementById('footerDetails').textContent = translations[lang].footerDetails || '';
+            
+            // update single toggle button label to show the language you'll switch TO
+            const btn = document.getElementById('langToggleBtn');
+            if (btn) btn.textContent = (lang === 'en') ? 'عربي' : 'EN';
+        }
+        
+        // single toggle button behaviour
+        document.getElementById('langToggleBtn').addEventListener('click', function() {
+            const next = (currentLang === 'en') ? 'ar' : 'en';
+            toggleLanguage(next);
+        });
+        
+        // initialize UI
+        toggleLanguage('en');
+        
+        // Rest of your existing JavaScript...
+        
         function updateCountdown() {
             const eventDate = new Date('June 7, 2026 19:00:00').getTime();
             const now = new Date().getTime();
@@ -761,11 +992,17 @@
         setInterval(updateCountdown, 1000);
         
         document.getElementById('uploadBtn').addEventListener('click', function() {
-            alert('In a real implementation, this would open a photo upload interface. Thank you for sharing our special day!');
+            const message = currentLang === 'en' 
+                ? 'In a real implementation, this would open a photo upload interface. Thank you for sharing our special day!' 
+                : 'في التنفيذ الفعلي، سيتم فتح واجهة تحميل الصور. شكرًا لك لمشاركة يومنا الخاص!';
+            alert(message);
         });
         
         document.getElementById('mapBtn').addEventListener('click', function() {
-            alert('Map feature would open here showing directions to Diva Garden Hall, Talaha City.');
+            const message = currentLang === 'en'
+                ? 'Map feature would open here showing directions to Diva Garden Hall, Talaha City.'
+                : 'ستفتح ميزة الخريطة هنا لعرض الاتجاهات إلى قاعة ديفا جاردن، مدينة طلحة.';
+            alert(message);
         });
         
         function createHearts() {
@@ -862,7 +1099,11 @@
         });
         
         document.getElementById('clearCanvas').addEventListener('click', function() {
-            if (confirm('Are you sure you want to clear your drawing?')) {
+            const message = currentLang === 'en'
+                ? 'Are you sure you want to clear your drawing?'
+                : 'هل أنت متأكد أنك تريد مسح رسمتك؟';
+            
+            if (confirm(message)) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
         });
@@ -870,8 +1111,15 @@
         document.getElementById('saveDrawing').addEventListener('click', function() {
             const dataURL = canvas.toDataURL('image/png');
             const modal = document.createElement('div');
+            
+            const title = currentLang === 'en' ? 'Drawing Saved!' : 'تم حفظ الرسم!';
+            const message = currentLang === 'en' 
+                ? 'Your creative masterpiece has been added to our gallery! Thank you for celebrating with us! ❤️'
+                : 'تمت إضافة تحفتك الإبداعية إلى معرضنا! شكرًا لك للاحتفال معنا! ❤️';
+            const buttonText = currentLang === 'en' ? 'Awesome!' : 'رائع!';
+            
             modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(44, 62, 80, 0.95); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px);';
-            modal.innerHTML = `<div style="background: white; padding: 50px; border-radius: 25px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.4);"><i class="fas fa-check-circle" style="font-size: 5rem; color: #2ecc71; margin-bottom: 20px;"></i><h2 style="color: var(--primary-blue); margin-bottom: 15px; font-size: 2rem;">Drawing Saved!</h2><p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">Your creative masterpiece has been added to our gallery! Thank you for celebrating with us! ❤️</p><button id="closeModal" style="background: linear-gradient(to right, var(--accent-blue), var(--light-blue)); color: white; border: none; padding: 15px 40px; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 1.1rem;">Awesome!</button></div>`;
+            modal.innerHTML = `<div style="background: white; padding: 50px; border-radius: 25px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.4);"><i class="fas fa-check-circle" style="font-size: 5rem; color: #2ecc71; margin-bottom: 20px;"></i><h2 style="color: var(--primary-blue); margin-bottom: 15px; font-size: 2rem;">${title}</h2><p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">${message}</p><button id="closeModal" style="background: linear-gradient(to right, var(--accent-blue), var(--light-blue)); color: white; border: none; padding: 15px 40px; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 1.1rem;">${buttonText}</button></div>`;
             document.body.appendChild(modal);
             
             const gallery = document.getElementById('drawingsGallery');
